@@ -1,7 +1,6 @@
 # AGENTS.md
 
 ## Scope
-- Applies to `/home/chris/Python/Projekte/2026/Obisian_Wallabag_Plugin/obsidian-wallabagger-master`.
 - This repository is an Obsidian plugin written in TypeScript.
 - Main source entrypoint: `src/main.ts`.
 - Bundled output expected by Obsidian: `main.js`.
