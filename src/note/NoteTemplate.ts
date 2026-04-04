@@ -56,3 +56,7 @@ export const DefaultTemplate = new NoteTemplate(
 export const PDFTemplate = new NoteTemplate(
   '---\ntags: {{tags}}\n---\n ## {{article_title}} []({{original_link}})[]({{wallabag_link}})\nPDF: [[{{pdf_link}}]]'
 );
+
+export const AnnotationsTemplate = new NoteTemplate(
+  '---\ntags: {{tags}}\nwallabag_id: {{id}}\n---\n## {{article_title}}\nOriginal: {{original_link}}\nWallabag: {{wallabag_link}}\n\n{{annotations}}'
+);

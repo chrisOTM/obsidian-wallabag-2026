@@ -1,7 +1,9 @@
 import WallabagPlugin from 'main';
 import { App, Notice, PluginSettingTab, sanitizeHTMLToDom, Setting } from 'obsidian';
 import WallabagAPI from 'wallabag/WallabagAPI';
-import { WallabagSettings } from './WallabagSettings';
+import { SyncContentMode, WallabagSettings } from './WallabagSettings';
+
+type TextSettingKey = Exclude<keyof WallabagSettings, 'syncContentMode'>;
 
 export interface TextSetting {
   name: string;
@@ -135,6 +137,19 @@ export class WallabagSettingTab extends PluginSettingTab {
       });
 
     new Setting(this.containerEl)
+      .setName('Sync content mode')
+      .setDesc('Choose whether notes contain the full article or only Wallabag annotations and annotation notes. Articles without annotations are skipped in annotations-only mode.')
+      .addDropdown(async (dropdown) => {
+        dropdown.addOption('full', 'Full article');
+        dropdown.addOption('annotations-only', 'Annotations only');
+        dropdown.setValue(this.plugin.settings.syncContentMode);
+        dropdown.onChange(async (value) => {
+          this.plugin.settings.syncContentMode = value as SyncContentMode;
+          await this.plugin.saveSettings();
+        });
+      });
+
+    new Setting(this.containerEl)
       .setName('Add article ID in the title')
       .setDesc('If enabled the article ID will be added to title.')
       .addToggle(async (toggle) => {
@@ -223,7 +238,7 @@ export class WallabagSettingTab extends PluginSettingTab {
   };
 
   private updateSetting =
-    (key: keyof WallabagSettings): ((v: string) => void) =>
+    (key: TextSettingKey): ((v: string) => void) =>
       async (v: string) => {
         this.plugin.settings[key] = v;
         await this.plugin.saveSettings();

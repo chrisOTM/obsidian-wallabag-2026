@@ -1,5 +1,5 @@
 import WallabagPlugin from 'main';
-import NoteTemplate, { DefaultTemplate, PDFTemplate } from 'note/NoteTemplate';
+import NoteTemplate, { AnnotationsTemplate, DefaultTemplate, PDFTemplate } from 'note/NoteTemplate';
 import { Command, Notice, sanitizeHTMLToDom, normalizePath } from 'obsidian';
 import { WallabagArticle } from 'wallabag/WallabagAPI';
 
@@ -31,6 +31,26 @@ export default class SyncArticlesCommand implements Command {
   private async getUserTemplate(): Promise<NoteTemplate> {
     const template = await this.plugin.app.vault.adapter.read(`${this.plugin.settings.articleTemplate}.md`);
     return new NoteTemplate(template);
+  }
+
+  private shouldSyncArticle(wallabagArticle: WallabagArticle): boolean {
+    if (this.plugin.settings.syncContentMode === 'annotations-only') {
+      return wallabagArticle.annotations.length > 0;
+    }
+
+    return true;
+  }
+
+  private async getTemplate(): Promise<NoteTemplate> {
+    if (this.plugin.settings.articleTemplate !== '') {
+      return this.getUserTemplate();
+    }
+
+    if (this.plugin.settings.syncContentMode === 'annotations-only') {
+      return AnnotationsTemplate;
+    }
+
+    return DefaultTemplate;
   }
 
   private getFolder(wallabagArticle: WallabagArticle): string {
@@ -80,11 +100,12 @@ export default class SyncArticlesCommand implements Command {
     );
     const newIds = await Promise.all(
       articles
-        .filter((article) => !previouslySynced.contains(article.id))
+        .filter((article) => !previouslySynced.includes(article.id))
+        .filter((article) => this.shouldSyncArticle(article))
         .map(async (article) => {
           const folder = this.getFolder(article);
           if (this.plugin.settings.downloadAsPDF !== 'true') {
-            const template = this.plugin.settings.articleTemplate === '' ? DefaultTemplate : await this.getUserTemplate();
+            const template = await this.getTemplate();
             const filename = normalizePath(`${folder}/${this.getFilename(article)}.md`);
             const content = template.fill(
               article,
@@ -97,10 +118,18 @@ export default class SyncArticlesCommand implements Command {
             const pdfFilename = normalizePath(`${this.plugin.settings.pdfFolder}/${this.getFilename(article)}.pdf`);
             const pdf = await this.plugin.api.exportArticle(article.id);
             await this.plugin.app.vault.adapter.writeBinary(pdfFilename, pdf);
-            if (this.plugin.settings.createPDFNote) {
-              const template = this.plugin.settings.articleTemplate === '' ? PDFTemplate : await this.getUserTemplate();
+            if (this.plugin.settings.createPDFNote === 'true') {
+              const template = this.plugin.settings.articleTemplate === ''
+                ? (this.plugin.settings.syncContentMode === 'annotations-only' ? AnnotationsTemplate : PDFTemplate)
+                : await this.getUserTemplate();
               const filename = normalizePath(`${folder}/${this.getFilename(article)}.md`);
-              const content = template.fill(article, this.plugin.settings.serverUrl, this.plugin.settings.tagFormat, pdfFilename);
+              const content = template.fill(
+                article,
+                this.plugin.settings.serverUrl,
+                this.plugin.settings.convertHtmlToMarkdown,
+                this.plugin.settings.tagFormat,
+                pdfFilename
+              );
               await this.createNoteIfNotExists(filename, content);
             }
           }
