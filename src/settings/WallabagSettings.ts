@@ -1,3 +1,5 @@
+export type SyncContentMode = 'full' | 'annotations-only';
+
 export interface WallabagSettings {
   serverUrl: string;
   tag: string;
@@ -15,6 +17,7 @@ export interface WallabagSettings {
   tagFormat: string;
   unreadFolder: string;
   archivedFolder: string;
+  syncContentMode: SyncContentMode;
 }
 
 export const DEFAULT_SETTINGS: WallabagSettings = {
@@ -34,4 +37,5 @@ export const DEFAULT_SETTINGS: WallabagSettings = {
   tagFormat: 'csv',
   unreadFolder: '',
   archivedFolder: '',
+  syncContentMode: 'full',
 };

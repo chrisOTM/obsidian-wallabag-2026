@@ -27,13 +27,14 @@ There are various settings under the plugin settings you can use to personalize 
 | Wallabag archived article notes folder location        | (optional) Choose the location where the archived synced article notes will be created.                             |
 | Export as PDF                                          | If enabled synced articles will be exported as PDFs.                                                                |
 | Convert HTML Content extracted by Wallabag to Markdown | If enabled the content of the Wallabag article will be converted to markdown before being used for the new article. |
+| Sync content mode                                      | Choose whether synced notes contain the full article or only annotations and annotation notes.                      |
 | Archive article after sync                             | If enabled the article will be archived after being synced.                                                         |
 | Add article ID in the title                            | If enabled the article ID will be added to title.                                                                   |
 | Tag format                                             | Determines how the tags will be populated in the created not. CSV(tag1, tag2) or hashtags(#tag1 #tag2)              |
 
 ## Templating
 
-By default this plugin offers two builtin templates; one for inserting the content of the article as a note and one for creating a note with a link to the exported PDF, when the option is enabled. Both the templates include link to the original articles, a link to the Wallabag item and tags. See the example below:
+By default this plugin offers three builtin templates; one for inserting the content of the article as a note, one for creating a note with a link to the exported PDF when the option is enabled, and one for syncing only annotations and annotation notes. The builtin templates include links to the original article, a link to the Wallabag item and tags.
 
 ![](screenshots/ss1.png)
 
@@ -49,6 +50,7 @@ You can use a custom template, in that case plugin will pass the following varia
 | `updated_at` | Last modification date of the article in Wallabag RemoveCurrentFromSyncedArticlesCacheCommand |
 | `wallabag_link` | Link to the article in Wallabag |
 | `content` | HTML content extracted by wallabag |
+| `annotations` | All Wallabag highlights and notes rendered into markdown blocks. In annotations-only mode this is the main note content. |
 | `pdf_link` | An Obsidian wikilink to the exported pdf file. <sub><br> Only populated if the PDF export option is choosen.</sub> |
 | `tags` | Tags attached to the Wallabag article, format depends on the setting |
 | `reading_time` | Reading time of the article |
