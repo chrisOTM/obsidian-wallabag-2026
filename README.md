@@ -74,7 +74,7 @@ annotation-target: {{pdf_link}}
 ### Manually
 
 - You need Obsidian v1.0.0+ for latest version of plugin.
-- Get the [Latest release of the plugin]([[https://github.com/huseyz/obsidian-wallabag](https://github.com/chrisOTM/obsidian-wallabag-2026)](https://github.com/chrisOTM/obsidian-wallabag-2026).
+- Get the Latest files of the plugin (close or download the files from this repo).
 - Create a directory for the plugin under you plugins folder, e.g. `[VAULT]/.obsidian/plugins/obsidian-wallabag`.
 - Put the release files under that folder.
 - Reload Obsidian.
