@@ -1,5 +1,7 @@
 # Obsidian Wallabag Plugin
 
+*Plugin forked from https://github.com/huseyz/obsidian-wallabag* and updated.
+
 This plugin for [Obsidian](https://obsidian.md) allows you to sync [Wallabag](https://www.wallabag.it/en) items into Obsidian notes in various ways.
 
 ## Authentication
