@@ -72,7 +72,7 @@
 - Build target: `es2020` in esbuild, `es2018` in TypeScript.
 - Source maps are inline in dev builds and disabled in production builds.
 - ESLint uses `eslint:recommended` and `plugin:@typescript-eslint/recommended`.
-- Prettier is installed, but no format script or project Prettier config was found.
+- Prettier is installed and configured in `.prettierrc` (single quotes, 2-space indent, `printWidth` 150, `trailingComma: es5`); there is no `format` script, so run it via `npx prettier`.
 
 ## Rules Files Check
 - No `.cursor/rules/` directory was found.

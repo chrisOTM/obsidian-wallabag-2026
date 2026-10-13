@@ -24,3 +24,6 @@ data.json
 # Plugin
 .__wallabag_token__
 .synced
+
+# graphify knowledge graph (local tooling)
+graphify-out/
